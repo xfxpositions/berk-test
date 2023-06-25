@@ -4,124 +4,150 @@
       Kayıt Ol
     </div>
     <div class="w-52 flex justify-center gap-y-4 flex-col">
-      <!--Ad-->
+      <!-- Ad -->
       <div class="field field_v2">
         <input
           class="field__input text-white"
-          placeholder="Link"
+          placeholder="Adınız"
           autocomplete="off"
-          v-model="firstName.value"
+          v-model="firstName.value.value"
+          @input="validateFirstName"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Adınız</span>
         </span>
       </div>
+      <div v-if="firstName.errorMessages.length > 0" class="text-red-500">
+        <span v-for="message in firstName.errorMessages" :key="message">{{
+          message
+        }}</span>
+      </div>
 
-      <!--Soyad-->
+      <!-- Soyad -->
       <div class="field field_v2">
         <input
           class="field__input text-white"
-          placeholder="Link"
+          placeholder="Soyadınız"
           autocomplete="off"
-          v-model="lastName.value"
+          v-model="lastName.value.value"
+          @input="validateLastName"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Soyadınız</span>
         </span>
       </div>
-      <!--email-->
+      <div v-if="lastName.errorMessages.length > 0" class="text-red-500">
+        <span v-for="message in lastName.errorMessages" :key="message">{{
+          message
+        }}</span>
+      </div>
+
+      <!-- Email -->
       <div class="field field_v2">
         <input
           class="field__input text-white"
-          placeholder="Link"
+          placeholder="Mail Adresiniz"
           autocomplete="off"
-          v-model="email2.value.value"
-          @input="email2.validator()"
+          v-model="email.value.value"
+          @input="validateEmail"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Mail Adresiniz</span>
         </span>
       </div>
-      <div v-if="email2.errorMessages.length > 0" class="text-red-500">
-        <span v-for="message in email2.errorMessages" :key="message">{{
+      <div v-if="email.errorMessages.length > 0" class="text-red-500">
+        <span v-for="message in email.errorMessages" :key="message">{{
           message
         }}</span>
       </div>
-      <!--Phone Number-->
+
+      <!-- Phone Number -->
       <div class="field field_v2">
         <input
-          type="number"
+          type="tel"
           class="field__input text-white"
-          placeholder="Link"
+          placeholder="Tel No"
           autocomplete="off"
-          v-model="phone.value.raw"
+          v-model="phone.value.value"
+          @input="validatePhone"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Tel No</span>
         </span>
       </div>
-      <!--birth Date-->
-      <div class="w-full">
-        <input type="date" class="w-full" />
+      <div v-if="phone.errorMessages.length > 0" class="text-red-500">
+        <span v-for="message in phone.errorMessages" :key="message">{{
+          message
+        }}</span>
       </div>
-      <!--Gender-->
+
+      <!-- Birth Date -->
       <div class="w-full">
-        <select v-model="gender.value" class="w-full">
-          <option value="male" class="w-full">Erkek</option>
-          <option value="female" class="w-full">Kadın</option>
-          <option value="?" class="w-full">Sanane</option>
+        <input type="date" class="w-full" v-model="birthday.value" />
+      </div>
+
+      <!-- Gender -->
+      <div class="w-full">
+        <select v-model="gender.value.value" class="w-full">
+          <option value="male">Erkek</option>
+          <option value="female">Kadın</option>
+          <option value="?">Sanane</option>
         </select>
       </div>
+
       <!-- Password -->
       <div class="field field_v2">
         <input
           class="field__input text-white"
-          placeholder="Enter your password"
+          placeholder="Password"
           autocomplete="off"
           type="password"
-          v-model="password.value"
+          v-model="password.value.value"
+          @input="validatePassword"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Password</span>
         </span>
       </div>
+      <div v-if="password.errorMessages.length > 0" class="text-red-500">
+        <span v-for="message in password.errorMessages" :key="message">{{
+          message
+        }}</span>
+      </div>
+
       <!-- Confirm Password -->
       <div class="field field_v2">
         <input
           class="field__input text-white"
-          placeholder="Confirm your password"
+          placeholder="Confirm Password"
           autocomplete="off"
           type="password"
-          v-model="confirmPassword.value"
+          v-model="confirmPassword.value.value"
+          @input="confirmPassword.validator"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Confirm Password</span>
         </span>
       </div>
+      <div v-if="confirmPassword.errorMessages.length > 0" class="text-red-500">
+        <span v-for="message in confirmPassword.errorMessages" :key="message">{{
+          message
+        }}</span>
+      </div>
 
-      <!-- isWhatsapp -->
-      <label class="w-full text-center text-white" for="whatsapp"
-        >Whatsapp?</label
-      >
-      <input
-        class="text-white"
-        id="whatsapp"
-        type="checkbox"
-        placeholder="Whatsapp?"
-      />
-
-      <button
-        class="w-full text-white border border-white rounded-md p-3"
-        @click="sendRegister"
-      >
-        Send
-      </button>
+      <!-- Submit Button -->
+      <div class="flex justify-center">
+        <button
+          class="bg-blue-500 text-white py-2 px-4 rounded"
+          @click="submitForm2"
+        >
+          Submit
+        </button>
+      </div>
     </div>
   </div>
 </template>
-
 <script setup>
-import "@/assets/css/input.css";
 import { ref } from "vue";
 
 class ValidatorState {
@@ -130,8 +156,8 @@ class ValidatorState {
     this.errorMessages = [];
     this.validators = validators;
   }
+
   validator() {
-    console.log("validator");
     this.validators.forEach((validator) => {
       const isValid = validator.validation(this.value.value);
 
@@ -149,104 +175,107 @@ class ValidatorState {
   }
 }
 
-const firstName = ref({ value: "", errorMessages: [] });
-const lastName = ref({ value: "", errorMessages: [] });
-const email2 = new ValidatorState("", [
+// Fields
+const firstName = new ValidatorState("", [
   {
-    name: "emailFormat",
-    validation: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
-    errorMessage: "Invalid email format.",
+    name: "required",
+    validation: (value) => value !== "",
+    errorMessage: "Ad alanı boş bırakılamaz.",
     error: false,
   },
 ]);
 
-const email = ref({
-  value: "",
-  errorMessages: [],
-  validator: () => {
-    console.log("validator");
-    email.value.validators.forEach((validator) => {
-      const isValid = validator.validation(email.value.value);
-
-      if (!isValid && !validator.error) {
-        email.value.errorMessages.push(validator.errorMessage);
-        validator.error = true;
-      } else if (isValid && validator.error) {
-        const index = email.value.errorMessages.indexOf(validator.errorMessage);
-        if (index !== -1) {
-          email.value.errorMessages.splice(index, 1);
-        }
-        validator.error = false;
-      }
-    });
+const lastName = new ValidatorState("", [
+  {
+    name: "required",
+    validation: (value) => value !== "",
+    errorMessage: "Soyad alanı boş bırakılamaz.",
+    error: false,
   },
-  validators: [
-    {
-      name: "emailFormat",
-      validation: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
-      errorMessage: "Invalid email format.",
-      error: false,
-    },
-  ],
-});
-const phone = ref({
-  value: { formatted: 0, raw: 0, countryCode: 0, callingCode: 0 },
-  errorMessages: [],
-});
-const password = ref({ value: "", errorMessage: "" });
-const confirmPassword = ref({ value: "", errorMessages: [] });
-const birthday = ref({ value: "", errorMessage: "" });
-const gender = ref({ value: "", errorMessages: [] });
-const isWhatsapp = ref({ value: false, errorMessages: [] });
+]);
 
-// validations
+const email = new ValidatorState("", [
+  {
+    name: "emailFormat",
+    validation: (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),
+    errorMessage: "Geçersiz e-posta formatı.",
+    error: false,
+  },
+]);
 
-watch(email, (newEmail, oldEmail) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  console.log(newEmail, oldEmail);
-  if (!emailRegex.test(newEmail.value)) {
-    newEmail.errorMessages.push("Invalid email format");
+const phone = new ValidatorState("", [
+  {
+    name: "required",
+    validation: (value) => value !== "",
+    errorMessage: "Telefon numarası boş bırakılamaz.",
+    error: false,
+  },
+]);
+
+const password = new ValidatorState("", [
+  {
+    name: "required",
+    validation: (value) => value !== "",
+    errorMessage: "Şifre alanı boş bırakılamaz.",
+    error: false,
+  },
+]);
+
+const confirmPassword = new ValidatorState("", [
+  {
+    name: "passwordMatch",
+    validation: (value) => value === password.value,
+    errorMessage: "Şifreler uyuşmuyor.",
+    error: false,
+  },
+]);
+
+const birthday = new ValidatorState("", []);
+const gender = new ValidatorState("", []);
+
+// Validations
+function validateFirstName() {
+  firstName.validator();
+}
+
+function validateLastName() {
+  lastName.validator();
+}
+
+function validateEmail() {
+  email.validator();
+}
+
+function validatePhone() {
+  phone.validator();
+}
+
+function validatePassword() {
+  password.validator();
+}
+
+function validateConfirmPassword() {
+  confirmPassword.validator();
+}
+
+function submitForm2() {
+  if (
+    firstName.errorMessages.length === 0 &&
+    lastName.errorMessages.length === 0 &&
+    email.errorMessages.length === 0 &&
+    phone.errorMessages.length === 0 &&
+    password.errorMessages.length === 0 &&
+    confirmPassword.errorMessages.length === 0
+  ) {
+    // Perform form submission or further actions here
+    console.log("Form submitted successfully");
   } else {
-    newEmail.errorMessages = [];
+    console.log("Form validation failed");
   }
-});
+}
 
-// const validations = reactive([
-//   {
-//     name: "email",
-//     validation: (username) => /^[a-zA-Z0-9\-_.]+$/.test(username),
-//     errorMessage:
-//       "Username just can contain latin letters, special characters and numbers.",
-//   },
-
-//   {
-//     name: "passwordLength",
-//     validation: ({ username, password, passwordAgain }) => password.length >= 7,
-//     errorMessage: "Password must be between 7 - 256 characters long.",
-//   },
-//   {
-//     name: "passwordSpecialCharacters",
-//     validation: ({ username, password, passwordAgain }) =>
-//       /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password),
-//     errorMessage: "Password must be contain at least one special character.",
-//   },
-
-//   {
-//     name: "passwordNumericalCharacters",
-//     validation: ({ username, password, passwordAgain }) =>
-//       /[0-9]/.test(password),
-//     errorMessage: "Password must be contain at least one numerical character.",
-//   },
-//   {
-//     name: "passwordsMatch",
-//     validation: ({ username, password, passwordAgain }) =>
-//       password === passwordAgain,
-//     errorMessage: "Passwords do not match.",
-//   },
-// ]);
-
-function sendRegister
+async function submitForm() {
+  const { data } = await useFetch("/auth/register");
+  console.log(toRaw(data.value));
+}
 </script>
-
-<style scoped></style>
-isAutoAccessorPropertactivated() { },
