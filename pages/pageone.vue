@@ -1,13 +1,12 @@
 <template>
-  <div class="text-4xl text-[aliceblue]">pageone</div>
+  <div class="text-4xl text-[aliceblue]">pageone {{ store.email }}</div>
 </template>
 <script setup>
-import { useAuthStore } from "@/stores/auth.js";
+import { AuthStore } from '@/stores/auth.js';
 
-const store = useAuthStore();
-console.log(store.token);
+const store = AuthStore();
 
 definePageMeta({
-  middleware: ["auth"],
+  middleware: ['auth']
 });
 </script>
