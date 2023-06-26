@@ -51,13 +51,17 @@ const password = ref(null);
 const failed = ref(false);
 
 async function submitForm() {
-  const account = accounts.accounts.find(acc => acc.email === email.value && acc.password === password.value);
-  if (account) {
-    auth.login({ email: account.email, password: account.password });
-    console.log(auth.email);
+  const { data } = await useFetch('/api/login', {
+    method: 'POST',
+    query: {
+      email: email.value,
+      password: password.value
+    }
+  });
+  if (toRaw(data.value)) {
+    auth.login(data.value);
   } else {
-    console.log('login failed');
-    failed.value = true;
+    console.log('failed to login');
   }
 }
 </script>
