@@ -1,7 +1,7 @@
-import { useAuthStore } from "@/stores/auth.js";
+import { AuthStore } from '@/stores/auth.js';
 
 export default defineNuxtRouteMiddleware((to, from) => {
-  const store = useAuthStore();
+  const store = AuthStore();
   //check if store contains token
   console.log(to, from);
 });

@@ -4,24 +4,62 @@
     <div class="w-52 flex justify-center gap-y-4 flex-col">
       <!--Ad-->
       <div class="field field_v2">
-        <input id="last-name" class="field__input text-white" placeholder="Link" @input="getYoutubeData" autocomplete="off" />
+        <input
+          id="last-name"
+          v-model="email"
+          class="field__input text-white"
+          placeholder="Link"
+          @input="getYoutubeData"
+          autocomplete="off" />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Mail Adresiniz</span>
         </span>
       </div>
       <!--Soyad-->
       <div class="field field_v2">
-        <input id="last-name" type="text" class="field__input text-white" placeholder="Link" @input="getYoutubeData" autocomplete="off" />
+        <input
+          id="last-name"
+          type="text"
+          v-model="password"
+          class="field__input text-white"
+          placeholder="Link"
+          @input="getYoutubeData"
+          autocomplete="off" />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Şifreniz</span>
         </span>
+      </div>
+      <div v-if="failed" class="text-red-500">Kullanıcı Adı veya şifre hatalı</div>
+      <div class="flex justify-center">
+        <button class="bg-blue-500 text-white py-2 px-4 rounded" @click="submitForm">Submit</button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import '@/assets/css/input.css';
+import { AccountsStore } from '@/stores/accounts.js';
+import { AuthStore } from '@/stores/auth.js';
+
+const auth = AuthStore();
+const accounts = AccountsStore();
+const email = ref(null);
+const password = ref(null);
+
+const failed = ref(false);
+
+async function submitForm() {
+  const account = accounts.accounts.find(acc => acc.email === email.value && acc.password === password.value);
+  if (account) {
+    auth.login({ email: account.email, password: account.password });
+    console.log(auth.email);
+  } else {
+    console.log('login failed');
+    failed.value = true;
+  }
+}
 </script>
 
 <style scoped></style>
