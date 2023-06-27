@@ -252,6 +252,10 @@ async function submitForm() {
   }
 }
 
+import { AccountsStore } from '@/stores/accounts';
+
+const accounts = AccountsStore();
+
 async function deneme() {
   const { data } = await useFetch('/api/register', {
     method: 'POST',
@@ -265,6 +269,6 @@ async function deneme() {
       password: password.value.value
     }
   });
-  console.log(data);
+  accounts.addAccount(data.value);
 }
 </script>

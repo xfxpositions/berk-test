@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia';
 export const AccountsStore = defineStore('accounts', {
   state: () => ({
-    count: 2,
     accounts: [
       {
         firstName: 'John',
         lastName: 'Doe',
         email: 'johndoe@gmail.com',
-        phone: '123456789',
+        phone: '12345678',
         password: '123456',
         birthday: '02/13/2000',
         gender: 'male'
@@ -33,6 +32,17 @@ export const AccountsStore = defineStore('accounts', {
     addAccount(payload) {
       this.accounts.push(payload);
       console.log(this.accounts);
+    },
+    resetPassword({ phone, password }) {
+      const account = this.accounts.find(acc => acc.phone === phone);
+      if (account) {
+        account.password = password;
+        this.accounts = [...this.accounts.filter(acc => acc.phone !== phone), account];
+
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 });
