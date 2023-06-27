@@ -1,11 +1,11 @@
 import { AccountsStore } from '@/stores/accounts.js';
-import { AuthStore } from '@/stores/auth.js';
 import jwt from 'jsonwebtoken';
 
 export default defineEventHandler(async event => {
   const query = getQuery(event);
   const accounts = AccountsStore();
   const email = query.email;
+  console.log(accounts);
   const password = query.password;
   const account = accounts.accounts.find(acc => acc.email === email && acc.password === password);
   if (account) {

@@ -103,6 +103,7 @@ async function resetPassword() {
   if (success) {
     console.log('password reset successful');
     console.log(account.value);
+    await navigateTo('/login');
   } else {
     console.log('failed to reset password');
   }
