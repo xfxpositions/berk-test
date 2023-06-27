@@ -3,21 +3,21 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   app: {
     head: {
-      title: 'Nuxt 3 Portfolio',
-      charset: 'utf-8',
-      viewport: 'width=device-width, initial-scale=1'
-    }
+      title: "Nuxt 3 Portfolio",
+      charset: "utf-8",
+      viewport: "width=device-width, initial-scale=1",
+    },
   },
-  modules: ['@pinia/nuxt'],
+  modules: ["@pinia/nuxt", "@vee-validate/nuxt", "nuxt-headlessui"],
   buildModules: [
     // ...
-    '@nuxtjs/tailwindcss'
+    "@nuxtjs/tailwindcss",
   ],
-  css: ['@/main.css'],
+  css: ["@/main.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
-      autoprefixer: {}
-    }
-  }
+      autoprefixer: {},
+    },
+  },
 });
