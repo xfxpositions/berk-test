@@ -38,7 +38,6 @@ export const AccountsStore = defineStore('accounts', {
       if (account) {
         account.password = password;
         this.accounts = [...this.accounts.filter(acc => acc.phone !== phone), account];
-
         return true;
       } else {
         return false;
