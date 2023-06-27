@@ -4,10 +4,9 @@
 
 <script setup>
 import { AuthStore } from '@/stores/auth';
+import nuxtStorage from 'nuxt-storage';
 
-const auth = AuthStore();
-
-auth.logout();
+nuxtStorage.localStorage.setData('token', null);
 </script>
 
 <style scoped></style>

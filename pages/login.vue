@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex flex-wrap justify-center gap-y-2">
+  <div class="w-full h-full flex flex-wrap justify-center gap-y-2 text-[aliceblue]">
     <div class="text-4xl w-full text-[aliceblue] flex justify-center">Giriş Yap</div>
     <div class="w-52 flex justify-center gap-y-4 flex-col">
       <!--Ad-->
@@ -30,6 +30,7 @@
         </span>
       </div>
       <div v-if="failed" class="text-red-500">Kullanıcı Adı veya şifre hatalı</div>
+      <button class="w-full flex justify-end">Şifremi unuttum</button>
       <div class="flex justify-center">
         <button class="bg-blue-500 text-white py-2 px-4 rounded" @click="submitForm">Submit</button>
       </div>
@@ -39,6 +40,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import nuxtStorage from 'nuxt-storage';
 import '@/assets/css/input.css';
 import { AccountsStore } from '@/stores/accounts.js';
 import { AuthStore } from '@/stores/auth.js';
@@ -59,7 +61,7 @@ async function submitForm() {
     }
   });
   if (toRaw(data.value)) {
-    auth.login(data.value);
+    nuxtStorage.localStorage.setData('token', data.value, 15);
   } else {
     console.log('failed to login');
   }
