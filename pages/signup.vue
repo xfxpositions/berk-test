@@ -10,18 +10,15 @@
           class="field__input text-white"
           placeholder="Adınız"
           autocomplete="off"
-          v-model="firstName.value.value"
-          @input="validateFirstName"
+          v-model="firstName.value"
+          @input="firstName.validator"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Adınız</span>
         </span>
       </div>
-      <div v-if="firstName.errorMessages.length > 0" class="text-red-500">
-        <span v-for="message in firstName.errorMessages" :key="message">{{
-          message
-        }}</span>
-      </div>
+
+      <ValidatorStateErrorHandler :validator-object="firstName" />
 
       <!-- Soyad -->
       <div class="field field_v2">
@@ -29,18 +26,14 @@
           class="field__input text-white"
           placeholder="Soyadınız"
           autocomplete="off"
-          v-model="lastName.value.value"
-          @input="validateLastName"
+          v-model="lastName.value"
+          @input="lastName.validator"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Soyadınız</span>
         </span>
       </div>
-      <div v-if="lastName.errorMessages.length > 0" class="text-red-500">
-        <span v-for="message in lastName.errorMessages" :key="message">{{
-          message
-        }}</span>
-      </div>
+      <ValidatorStateErrorHandler :validator-object="lastName" />
 
       <!-- Email -->
       <div class="field field_v2">
@@ -48,18 +41,15 @@
           class="field__input text-white"
           placeholder="Mail Adresiniz"
           autocomplete="off"
-          v-model="email.value.value"
-          @input="validateEmail"
+          v-model="email.value"
+          @input="email.validator"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Mail Adresiniz</span>
         </span>
       </div>
-      <div v-if="email.errorMessages.length > 0" class="text-red-500">
-        <span v-for="message in email.errorMessages" :key="message">{{
-          message
-        }}</span>
-      </div>
+
+      <ValidatorStateErrorHandler :validator-object="email" />
 
       <!-- Phone Number -->
       <div class="field field_v2">
@@ -68,18 +58,15 @@
           class="field__input text-white"
           placeholder="Tel No"
           autocomplete="off"
-          v-model="phone.value.value"
-          @input="validatePhone"
+          v-model="phone.value"
+          @input="phone.validator"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Tel No</span>
         </span>
       </div>
-      <div v-if="phone.errorMessages.length > 0" class="text-red-500">
-        <span v-for="message in phone.errorMessages" :key="message">{{
-          message
-        }}</span>
-      </div>
+
+      <ValidatorStateErrorHandler :validator-object="phone" />
 
       <!-- Birth Date -->
       <div class="w-full">
@@ -89,7 +76,7 @@
       <!-- Gender -->
       <div class="w-full">
         <div class="w-full text-white mb-1">Cinsiyet</div>
-        <select v-model="gender.value.value" class="w-full">
+        <select v-model="gender.value" class="w-full">
           <option value="male">Erkek</option>
           <option value="female">Kadın</option>
           <option value="?">Sanane</option>
@@ -103,19 +90,14 @@
           placeholder="Password"
           autocomplete="off"
           type="password"
-          v-model="password.value.value"
-          @input="validatePassword"
+          v-model="password.value"
+          @input="password.validator"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Password</span>
         </span>
       </div>
-      <div v-if="password.errorMessages.length > 0" class="text-red-500">
-        <span v-for="message in password.errorMessages" :key="message">{{
-          message
-        }}</span>
-      </div>
-
+      <ValidatorStateErrorHandler :validator-object="password" />
       <!-- Confirm Password -->
       <div class="field field_v2">
         <input
@@ -123,18 +105,15 @@
           placeholder="Confirm Password"
           autocomplete="off"
           type="password"
-          v-model="confirmPassword.value.value"
+          v-model="confirmPassword.value"
           @input="confirmPassword.validator"
         />
         <span class="field__label-wrap" aria-hidden="true">
           <span class="field__label text-white">Confirm Password</span>
         </span>
       </div>
-      <div v-if="confirmPassword.errorMessages.length > 0" class="text-red-500">
-        <span v-for="message in confirmPassword.errorMessages" :key="message">{{
-          message
-        }}</span>
-      </div>
+
+      <ValidatorStateErrorHandler :validator-object="confirmPassword" />
 
       <!-- Submit Button -->
       <div class="flex justify-center">
@@ -145,39 +124,26 @@
           Submit
         </button>
       </div>
+      <modal :is-open.sync="isModalOpen" @on-code="onOtpCode" />
+      <button class="text-white" @click="openModal">Deneme</button>
     </div>
   </div>
 </template>
 <script setup>
 import { ref } from "vue";
 import "@/assets/css/input.css";
+import ValidatorState from "../utils/validatorState.js";
+import validator from "validator";
+import ValidatorStateErrorHandler from "../components/ValidatorStateErrorHandler.vue";
+import modal from "../components/modal.vue";
 
-class ValidatorState {
-  constructor(value, validators) {
-    this.value = ref(value);
-    this.errorMessagesRaw = ref([]);
-    this.errorMessages = this.errorMessagesRaw.value;
-    this.validators = validators;
-  }
+const isModalOpen = ref(false);
 
-  validator() {
-    this.validators.forEach((validator) => {
-      const isValid = validator.validation(this.value.value);
-
-      if (!isValid && !validator.error) {
-        this.errorMessages.push(validator.errorMessage);
-        validator.error = true;
-      } else if (isValid && validator.error) {
-        const index = this.errorMessages.indexOf(validator.errorMessage);
-        if (index !== -1) {
-          this.errorMessages.splice(index, 1);
-        }
-        validator.error = false;
-      }
-    });
-  }
+function onOtpCode(code) {
+  deneme();
+  isModalOpen.value = false;
+  console.log(code);
 }
-
 // Fields
 const firstName = new ValidatorState("", [
   {
@@ -213,6 +179,12 @@ const phone = new ValidatorState("", [
     errorMessage: "Telefon numarası boş bırakılamaz.",
     error: false,
   },
+  {
+    name: "phoneValidation",
+    validation: (value) => validator.isMobilePhone(value),
+    errorMessage: "Geçerli bir telefon numarası olmalı",
+    error: false,
+  },
 ]);
 
 const password = new ValidatorState("", [
@@ -220,6 +192,30 @@ const password = new ValidatorState("", [
     name: "required",
     validation: (value) => value !== "",
     errorMessage: "Şifre alanı boş bırakılamaz.",
+    error: false,
+  },
+  {
+    name: "length",
+    validation: (value) => value.length >= 7 && value.length <= 256,
+    errorMessage: "Şifre uzunluğu 7-256 karakter arasında olmalıdır.",
+    error: false,
+  },
+  {
+    name: "specialChar",
+    validation: (value) => /[!@#$%^&*(),.?":{}|<>]/.test(value),
+    errorMessage: "Şifre en az bir özel karakter içermelidir.",
+    error: false,
+  },
+  {
+    name: "uppercase",
+    validation: (value) => /[A-Z]/.test(value),
+    errorMessage: "Şifre en az bir büyük harf içermelidir.",
+    error: false,
+  },
+  {
+    name: "number",
+    validation: (value) => /[0-9]/.test(value),
+    errorMessage: "Şifre en az bir rakam içermelidir.",
     error: false,
   },
 ]);
@@ -236,32 +232,17 @@ const confirmPassword = new ValidatorState("", [
 const birthday = new ValidatorState("", []);
 const gender = new ValidatorState("", []);
 
-// Validations
-function validateFirstName() {
-  firstName.validator();
-}
-
-function validateLastName() {
-  lastName.validator();
-}
-
-function validateEmail() {
-  email.validator();
-}
-
-function validatePhone() {
-  phone.validator();
-}
-
-function validatePassword() {
-  password.validator();
-}
-
-function validateConfirmPassword() {
-  confirmPassword.validator();
+function openModal() {
+  isModalOpen.value = true;
+  console.log("NAN");
 }
 
 async function submitForm() {
+  firstName.validator();
+  lastName.validator();
+  password.validator();
+  email.validator();
+  confirmPassword.validator();
   if (
     firstName.errorMessages.length === 0 &&
     lastName.errorMessages.length === 0 &&
@@ -272,7 +253,6 @@ async function submitForm() {
   ) {
     // Perform form submission or further actions here
     console.log("Form submitted successfully");
-    deneme();
   } else {
     console.log("Form validation failed");
   }
@@ -286,13 +266,13 @@ async function deneme() {
   const { data } = await useFetch("/api/register", {
     method: "POST",
     query: {
-      firstName: firstName.value.value,
-      lastName: lastName.value.value,
-      email: email.value.value,
-      phone: phone.value.value,
-      birthday: birthday.value.value,
-      gender: gender.value.value,
-      password: password.value.value,
+      firstName: firstName.value,
+      lastName: lastName.value,
+      email: email.value,
+      phone: phone.value,
+      birthday: birthday.value,
+      gender: gender.value,
+      password: password.value,
     },
   });
   accounts.addAccount(data.value);

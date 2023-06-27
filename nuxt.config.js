@@ -8,7 +8,7 @@ export default defineNuxtConfig({
       viewport: "width=device-width, initial-scale=1",
     },
   },
-  modules: ["@pinia/nuxt", "@vee-validate/nuxt"],
+  modules: ["@pinia/nuxt", "@vee-validate/nuxt", "nuxt-headlessui"],
   buildModules: [
     // ...
     "@nuxtjs/tailwindcss",
