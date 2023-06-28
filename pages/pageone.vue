@@ -5,10 +5,7 @@
   </div>
 </template>
 <script setup>
-import { AuthStore } from '@/stores/auth.js';
 import NuxtStorage from 'nuxt-storage';
-
-const store = AuthStore();
 
 definePageMeta({
   middleware: ['auth']

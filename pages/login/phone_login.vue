@@ -44,11 +44,8 @@
 <script setup>
 import validator from 'validator';
 import ValidatorState from '@/utils/validatorState.js';
-import { AccountsStore } from '@/stores/accounts.js';
 import '@/assets/css/input.css';
 import nuxtStorage from 'nuxt-storage';
-
-const accounts = AccountsStore();
 
 const phoneOpen = ref(true);
 const phoneNotFound = ref(false);

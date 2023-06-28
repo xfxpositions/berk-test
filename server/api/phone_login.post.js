@@ -1,18 +1,22 @@
-import { AccountsStore } from '@/stores/accounts.js';
-import { AuthStore } from '@/stores/auth.js';
 import jwt from 'jsonwebtoken';
+import users from '../models/users';
 
 export default defineEventHandler(async event => {
   const query = getQuery(event);
-  const accounts = AccountsStore();
   const phone = query.phone;
   const password = query.password;
-  const account = accounts.accounts.find(acc => acc.phone === phone && acc.password === password);
-  if (account) {
-    const token = await jwt.sign({ phone: account.phone, password: account.password }, 'mysecrettoken');
-    console.log(token);
-    return token;
-  } else {
+
+  try {
+    const user = await users.findOne({ phone, password });
+    if (user) {
+      const token = await jwt.sign({ phone: user.phone, password: user.password }, 'mysecrettoken');
+      console.log(token);
+      return token;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Error finding user:', error);
     return null;
   }
 });

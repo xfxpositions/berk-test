@@ -40,8 +40,6 @@
 import { ref } from 'vue';
 import nuxtStorage from 'nuxt-storage';
 import '@/assets/css/input.css';
-import { AccountsStore } from '@/stores/accounts.js';
-import { AuthStore } from '@/stores/auth.js';
 import ValidatorState from '@/utils/validatorState';
 
 const loginType = ref('email');

@@ -61,9 +61,6 @@
 <script setup>
 import '@/assets/css/input.css';
 import { ref } from 'vue';
-import { AccountsStore } from '@/stores/accounts';
-
-const accounts = AccountsStore();
 
 const code = ref(null);
 const number = ref(null);

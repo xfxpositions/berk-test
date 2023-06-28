@@ -244,20 +244,19 @@ async function submitForm() {
   }
 }
 
-import { AccountsStore } from '@/stores/accounts';
-
-const accounts = AccountsStore();
-
 async function deneme() {
-  const data = {
-    firstName: firstName.value,
-    lastName: lastName.value,
-    email: email.value,
-    phone: phone.value,
-    password: password.value,
-    birthday: birthday.value,
-    gender: gender.value
-  };
-  accounts.addAccount(data);
+  const { data } = await useFetch('/api/register', {
+    method: 'POST',
+    body: {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      phone: phone,
+      password: password,
+      birthday: birthday,
+      gender: gender
+    }
+  });
+  console.log(toRaw(data.value));
 }
 </script>
